@@ -1,9 +1,10 @@
-import RegistrationForm from './components/RegistrationForm';
+import LandingPage from './components/LandingPage';
+import RegistrationForm from './components/LandingPage';
 
 export default function Home() {
   return (
     <main>
-      <RegistrationForm />
+      <LandingPage />
     </main>
   );
 }
