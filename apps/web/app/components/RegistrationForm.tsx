@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useState, ChangeEvent, FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import logo from '../assets/logo.png'; 
 
 interface FormData {
     email: string;
@@ -13,6 +16,7 @@ interface FormData {
 }
 
 const RegistrationForm: React.FC = () => {
+    const router = useRouter();
     const [formData, setFormData] = useState<FormData>({
         email: '',
         fullName: '',
@@ -34,14 +38,24 @@ const RegistrationForm: React.FC = () => {
     const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
         console.log('Form submitted:', formData);
+        // Here you would typically register the user and redirect to login
+    };
+
+    const navigateToLogin = (): void => {
+        router.push('/login'); // Adjust this path to match your app's routing
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center p-4">
-            <div className="text-center mb-6">
+        <div className="min-h-screen bg-gray-100 flex flex-col items-center p-4 pt-5">
+            <div className="text-center mb-4">
                 <div className="inline-flex items-center">
-                    <span className="text-blue-500 text-4xl font-bold">e</span>
-                    <span className="text-green-400 text-4xl font-bold">Halalan</span>
+                    <Image 
+                        src={logo} 
+                        alt="eHalalan Logo" 
+                        width={300} 
+                        height={100} 
+                        priority
+                    />
                 </div>
             </div>
 
@@ -149,7 +163,7 @@ const RegistrationForm: React.FC = () => {
                     </button>
 
                     <div className="text-center mt-4 text-sm">
-                        Already have an account? <a href="#" className="text-blue-500 hover:underline">Log in</a>.
+                        Already have an account? <a href="#" onClick={navigateToLogin} className="text-blue-500 hover:underline">Log in</a>.
                     </div>
                 </form>
             </div>
