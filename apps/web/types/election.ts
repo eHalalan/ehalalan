@@ -1,6 +1,7 @@
 export enum ElectionType {
   NATIONAL = 'National',
   SENATORIAL = 'Senatorial',
+  Local = 'Local',
 }
 
 export interface Election {
