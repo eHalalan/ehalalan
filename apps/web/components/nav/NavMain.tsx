@@ -24,8 +24,8 @@ const items = [
     icon: UserRoundIcon,
   },
   {
-    title: 'Ballot',
-    url: '/ballot/',
+    title: 'Elections',
+    url: '/elections/',
     icon: VoteIcon,
   },
   {

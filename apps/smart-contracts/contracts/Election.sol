@@ -28,7 +28,6 @@ contract Ballot {
     struct Voter {
         address voter;
         bool voted;
-        uint vote;
     }
 
     mapping(address => Voter) public voters;
@@ -38,19 +37,33 @@ contract Ballot {
         uint voteCount;
     }
 
-    Candidate[] public candidates;
+    Candidate[] public presidents;
+    Candidate[] public vicePresidents;
+    Candidate[] public senators;
     Registry private registry;
     bool isElectionOnGoing;
 
     address owner;
 
-    constructor(address registryAddress, string[] memory candidateNames) {
+    constructor(address registryAddress, string[] memory presidentNames, string[] memory vicePresidentNames, string[] memory senatorNames) {
         owner = msg.sender;
         registry = Registry(registryAddress);
 
-        for (uint i = 0; i < candidateNames.length; i++) {
-            candidates.push(Candidate({
-                name: candidateNames[i],
+        for (uint i = 0; i < presidentNames.length; i++) {
+            presidents.push(Candidate({
+                name: presidentNames[i],
+                voteCount: 0
+            }));
+        }
+        for (uint i = 0; i < vicePresidentNames.length; i++) {
+            vicePresidents.push(Candidate({
+                name: vicePresidentNames[i],
+                voteCount: 0
+            }));
+        }
+        for (uint i = 0; i < senatorNames.length; i++) {
+            senators.push(Candidate({
+                name: senatorNames[i],
                 voteCount: 0
             }));
         }
@@ -61,18 +74,33 @@ contract Ballot {
         isElectionOnGoing = status;
     }
 
-    function vote(uint candidate) external {
-        require(isElectionOnGoing == true, "This election is not on going.");
-        require(registry.isVoterVerified(msg.sender) == true, "You are not a verified voter.");
+    function vote(int presidentVote, int vicePresidentVote, int[] memory senatorVotes) external {
+        require(isElectionOnGoing, "This election is not on going.");
+        require(registry.isVoterVerified(msg.sender), "You are not a verified voter.");
         require(voters[msg.sender].voted == false, "You have already voted.");
-        require(candidate >= 0 && candidate < candidates.length, "Candidate does not exist.");
+
+        require(presidentVote < int(presidents.length), "Invalid vote for President.");
+        require(vicePresidentVote < int(vicePresidents.length), "Invalid vote for Vice President.");
+        require(senatorVotes.length == 12, "You have to vote 12 Senators.");
 
         voters[msg.sender].voted = true;
-        voters[msg.sender].vote = candidate;
-        candidates[candidate].voteCount++;
+        // -1 means abstain
+        if (presidentVote >= 0) {
+            presidents[uint(presidentVote)].voteCount++;
+        }
+
+        if (vicePresidentVote >= 0) {
+            vicePresidents[uint(vicePresidentVote)].voteCount++;
+        }
+
+        for (uint i = 0; i < senatorVotes.length; i++) {
+            if (senatorVotes[i] >= 0 && senatorVotes[i] < int(senators.length)) {
+                senators[uint(senatorVotes[i])].voteCount++;
+            }
+        }
     }
 
-    function getStatistic() external view returns (Candidate[] memory) {
-        return candidates;
+    function getStatistic() external view returns (Candidate[] memory, Candidate[] memory, Candidate[] memory) {
+        return (presidents, vicePresidents, senators);
     }
 } 
