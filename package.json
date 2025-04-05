@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/eHalalan/ehalalan/issues"
   },
-  "homepage": "https://github.com/eHalalan/ehalalan#readme"
+  "homepage": "https://github.com/eHalalan/ehalalan#readme",
+  "dependencies": {
+    "hardhat": "^2.22.19"
+  }
 }

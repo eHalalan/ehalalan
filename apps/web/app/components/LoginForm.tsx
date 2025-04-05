@@ -4,6 +4,7 @@ import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import logo from '../assets/logo.png';
+// import { registerVoter } from '../../services/votersRegistry';
 
 interface LoginData {
   email: string;
@@ -36,6 +37,25 @@ const LoginForm: React.FC = () => {
   const navigateToRegister = (): void => {
     router.push('/register'); // Adjust this path to match your app's routing
   };
+
+  // const exampleVoterAddress = '0x71C7656EC7ab88b098defB751B7401B5f6d8976F'; // Sample Ethereum address
+  // const exampleFullName = 'Maria Santos';
+
+  // // Execute the registration
+  // registerVoter(exampleVoterAddress, exampleFullName)
+  //   .then((docRef) => {
+  //     console.log(`Voter registered with ID: ${docRef.id}`);
+  //     console.log('Details:', {
+  //       address: exampleVoterAddress,
+  //       name: exampleFullName,
+  //       timestamp: new Date().toISOString(),
+  //     });
+  //   })
+  //   .catch((error) => {
+  //     console.error('Registration failed:', error);
+  //   });
+
+  // registerVoter(exampleVoterAddress, exampleFullName);
 
   return (
     <div className="w-full flex flex-col items-center p-4 pt-5">
