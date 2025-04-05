@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import { toast } from 'sonner';
-import { verifySignature } from '../lib/contracts/varifySignature';
+import { verifySignature } from '../lib/contracts/verifySignature';
 
 interface ContractsContextType {
   provider: ethers.BrowserProvider | null;
