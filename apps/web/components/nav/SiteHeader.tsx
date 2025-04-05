@@ -1,19 +1,24 @@
 'use client';
 
 import Link from 'next/link';
-import { ThemeToggle } from './ThemeToggle';
+import { Button } from '../ui/button';
+import { CustomSidebarTrigger } from './CustomSidebarTrigger';
 
 export function SiteHeader() {
   return (
-    <header className="flex sticky top-0 z-50 w-full items-center border-b bg-background">
-      <div className="flex h-[var(--header-height)] w-full items-center justify-between gap-2 px-8">
-        <div>
-          <Link href="/" className="text-2xl font-bold">
-            eHalalan
-          </Link>
+    <header className="flex w-full">
+      <div className="flex h-12 w-full items-center justify-between gap-2 px-4">
+        <div className="flex items-center gap-2">
+          <CustomSidebarTrigger />
         </div>
-        <div className="flex items-center gap-1">
-          <ThemeToggle />
+
+        <div className="flex items-center gap-2">
+          <Button size="sm" variant="outline" asChild>
+            <Link href="/login">Log in</Link>
+          </Button>
+          <Button size="sm" asChild>
+            <Link href="/register">Register</Link>
+          </Button>
         </div>
       </div>
     </header>

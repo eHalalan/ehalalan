@@ -1,9 +1,9 @@
 import LandingPage from './components/LandingPage';
-import RegistrationForm from './components/RegistrationForm';
+
 export default function Home() {
   return (
-    <main>
+    <div className="w-full h-full flex flex-col items-center justify-center">
       <LandingPage />
-    </main>
+    </div>
   );
 }
