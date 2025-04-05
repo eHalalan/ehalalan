@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { cookies } from 'next/headers';
+import { ContractsProvider } from '@/context/ContractsProvider';
 import { ThemeProvider } from '@/context/ThemeProvider';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { Toaster } from 'sonner';
@@ -40,32 +41,34 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <TooltipProvider>
+        <ContractsProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <TooltipProvider>
+              <Toaster />
+              <SidebarProvider
+                defaultOpen={defaultOpen}
+                className="flex flex-col"
+              >
+                <div className="flex flex-1">
+                  <AppSidebar />
+                  <SidebarInset>
+                    <SiteHeader />
+                    <div className="flex flex-col w-full min-h-screen">
+                      <main className="p-8 flex-grow">{children}</main>
+                      <Footer />
+                    </div>
+                  </SidebarInset>
+                </div>
+              </SidebarProvider>
+            </TooltipProvider>
             <Toaster />
-            <SidebarProvider
-              defaultOpen={defaultOpen}
-              className="flex flex-col"
-            >
-              <div className="flex flex-1">
-                <AppSidebar />
-                <SidebarInset>
-                  <SiteHeader />
-                  <div className="flex flex-col w-full min-h-screen">
-                    <main className="p-8 flex-grow">{children}</main>
-                    <Footer />
-                  </div>
-                </SidebarInset>
-              </div>
-            </SidebarProvider>
-          </TooltipProvider>
-          <Toaster />
-        </ThemeProvider>
+          </ThemeProvider>
+        </ContractsProvider>
       </body>
     </html>
   );
