@@ -36,7 +36,7 @@ async function activate() {
   const address = await ballot.getAddress();
 
   console.log(`Activating ballot: ${address}`);
-  await ballot.setElectionStatus(false);
+  await ballot.setElectionStatus(true);
   console.log(`Activated ballot: ${address}`);
 
   console.log('Updating data in DB.');
