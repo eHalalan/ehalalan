@@ -1,14 +1,11 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
-// import { getAuth } from 'firebase/auth';
+import dotenv from 'dotenv';
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+dotenv.config();
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: 'AIzaSyAOn-QCIWLxYrAU_5W-D_YVuG8RN7HN7UM',
+  apiKey: process.env.FIREBASE_API_KEY ?? '',
   authDomain: 'e-halalan.firebaseapp.com',
   projectId: 'e-halalan',
   storageBucket: 'e-halalan.firebasestorage.app',
@@ -19,7 +16,5 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-// const auth = getAuth(app);
 
-// export { db, auth };
 export { db };
