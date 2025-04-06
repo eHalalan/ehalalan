@@ -29,3 +29,9 @@ export async function registerVoterDetails({
     throw error;
   }
 }
+
+export async function isVoterVerified(address: string): Promise<boolean> {
+  // const voterDoc = doc(votersCol, address);
+
+  return true;
+}

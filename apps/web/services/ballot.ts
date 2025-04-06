@@ -1,6 +1,6 @@
 import { Election, VoteData } from '@/types/election';
 import { db } from './database';
-import { isVoterVerified } from './votersRegistry';
+import { isVoterVerified } from './DAO/votersRegistry';
 import { collection, doc, getDoc, runTransaction } from 'firebase/firestore';
 
 const electionsCol = collection(db, 'elections');
