@@ -1,7 +1,7 @@
 'use client';
 
 import { Skeleton } from '@/components/ui/skeleton';
-import { BallotCheckbox } from '@/app/elections/[type]/[year]/vote/BallotCheckbox';
+import { BallotCheckbox } from '@/app/elections/[id]/vote/BallotCheckbox';
 import { cn } from '@/lib/utils';
 import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
