@@ -31,11 +31,21 @@ const LoginForm: React.FC = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     console.log('Login submitted:', loginData);
-    // Here you would typically authenticate the user
+
+    const userName = loginData.email.split('@')[0];
+    const userData = {
+      email: loginData.email,
+      name: userName.charAt(0).toUpperCase() + userName.slice(1),
+      isLoggedIn: true
+    };
+
+    localStorage.setItem('userData', JSON.stringify(userData));
+
+    router.push('/dashboard');
   };
 
   const navigateToRegister = (): void => {
-    router.push('/register'); // Adjust this path to match your app's routing
+    router.push('/register');
   };
 
   // const exampleVoterAddress = '0x71C7656EC7ab88b098defB751B7401B5f6d8976F'; // Sample Ethereum address
