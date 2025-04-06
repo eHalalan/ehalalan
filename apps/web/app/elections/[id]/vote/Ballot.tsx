@@ -47,7 +47,7 @@ export function Ballot({ election }: Props) {
 
 export function BallotForm({ election }: { election: Election }) {
   const requiredSelections = election.type === ElectionType.NATIONAL ? 14 : 12;
-  const { account } = useContracts();
+  const { account, signer } = useContracts();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -64,7 +64,7 @@ export function BallotForm({ election }: { election: Election }) {
       return;
     }
 
-    if (!account) {
+    if (!account || !signer) {
       toast.error('Please connect your wallet.');
       return;
     }
@@ -86,7 +86,7 @@ export function BallotForm({ election }: { election: Election }) {
       }
 
       console.log(voteData);
-      await vote(account, election.id, voteData);
+      await vote(account, election.id, voteData, signer);
       toast.success('You submitted your vote!\n');
       router.push(`/elections/${election.id}`);
     } catch (error) {

@@ -7,10 +7,11 @@ import { verifySignature } from '../lib/contracts/verifySignature';
 import { AuthContext } from '@/services/models/Auth';
 import { db } from '@/services/database';
 import { collection, doc, updateDoc } from 'firebase/firestore';
+import { RegistryFactory } from '@/lib/contracts/factory';
 
 interface ContractsContextType {
   provider: ethers.BrowserProvider | null;
-  signer: ethers.Signer | null;
+  signer: ethers.JsonRpcSigner | null;
   account: string;
   isLoading: boolean;
   connectWallet: () => Promise<void>;
@@ -94,9 +95,13 @@ export const ContractsProvider = ({
         }
       }
 
-      const isVerified = localStorage.getItem('isWalletConnected');
+      const isVerified = localStorage.getItem('isVerified');
 
-      if (!isVerified) {
+      if (!isVerified && newSigner) {
+        const registry = RegistryFactory(newSigner);
+
+        await registry.registerVoter(currentUser.email);
+
         const votersCol = collection(db, 'registry');
         const voterDoc = doc(votersCol, currentUser.uid);
         await updateDoc(voterDoc, { wallet: address });
