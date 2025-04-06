@@ -32,21 +32,19 @@ const LoginForm: React.FC = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
-    const userName = loginData.email.split('@')[0];
-    const userData = {
-      email: loginData.email,
-      name: userName.charAt(0).toUpperCase() + userName.slice(1),
-      isLoggedIn: true,
-    };
+    // const userName = loginData.email.split('@')[0];
+    // const userData = {
+    //   email: loginData.email,
+    //   name: userName.charAt(0).toUpperCase() + userName.slice(1),
+    //   isLoggedIn: true,
+    // };
 
-    localStorage.setItem('userData', JSON.stringify(userData));
-
-    router.push('/dashboard');
     try {
       console.log('Attempting login with:', loginData.email);
       const userId = await loginUser(loginData.email, loginData.password);
       console.log('Login successful, user ID:', userId);
       if (userId) {
+        // localStorage.setItem('userData', JSON.stringify(userData));
         // Redirect to dashboard or protected page
         router.push('/dashboard');
       }
