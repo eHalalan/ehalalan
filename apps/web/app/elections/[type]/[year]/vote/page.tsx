@@ -1,4 +1,5 @@
 import React from 'react';
+import { Metadata } from 'next';
 import Link from 'next/link';
 import { ElectionType } from '@/types/election';
 import { getElection } from '@/lib/election';
@@ -10,6 +11,17 @@ interface Props {
     type: string;
     year: string;
   }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const resolvedParams = await params;
+  const type = resolvedParams.type as ElectionType;
+  const year = parseInt(resolvedParams.year);
+
+  return {
+    title: `${year} ${type} Election | Vote`,
+    description: `Vote in eHalalan Election ${year} ${type}`,
+  };
 }
 
 export default async function ElectionPage({ params }: Props) {

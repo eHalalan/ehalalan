@@ -5,12 +5,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import {
-  ChartColumnBigIcon,
-  HomeIcon,
-  UserRoundIcon,
-  VoteIcon,
-} from 'lucide-react';
+import { HomeIcon, UserRoundIcon, VoteIcon } from 'lucide-react';
 
 const items = [
   {
@@ -27,11 +22,6 @@ const items = [
     title: 'Elections',
     url: '/elections/',
     icon: VoteIcon,
-  },
-  {
-    title: 'Results',
-    url: '/results/',
-    icon: ChartColumnBigIcon,
   },
 ];
 
