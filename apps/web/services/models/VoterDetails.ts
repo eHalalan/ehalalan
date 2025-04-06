@@ -1,5 +1,3 @@
-import { Timestamp } from 'firebase/firestore';
-
 export interface VoterDetails {
   uid: string; // Matches AuthModel.uid
   fullName: string;
@@ -9,6 +7,10 @@ export interface VoterDetails {
   verified: boolean;
   registrationDate: string;
   lastUpdated: string;
+}
+
+export interface VoterWithWallet extends VoterDetails {
+  wallet: string | null;
 }
 
 export interface VoterFormData {
@@ -30,9 +32,9 @@ export function formToVoterDetails(
     email: formData.email,
     placeOfBirth: formData.placeOfBirth,
     dateOfBirth: formData.dateOfBirth,
-    verified: false, // Default to unverified
-    registrationDate: Timestamp.now().toString(),
-    lastUpdated: Timestamp.now().toString(),
+    verified: true, // Default to verified :>>
+    registrationDate: new Date().toISOString(),
+    lastUpdated: new Date().toISOString(),
   };
 }
 

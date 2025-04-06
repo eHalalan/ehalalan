@@ -10,6 +10,7 @@ import { AppSidebar } from '@/components/nav/AppSidebar';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { Footer } from '@/components/footer/Footer';
 import { SiteHeader } from '@/components/nav/SiteHeader';
+import { AuthProvider } from '@/services/models/Auth';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -41,34 +42,36 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ContractsProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <TooltipProvider>
+        <AuthProvider>
+          <ContractsProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="light"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <TooltipProvider>
+                <Toaster />
+                <SidebarProvider
+                  defaultOpen={defaultOpen}
+                  className="flex flex-col"
+                >
+                  <div className="flex flex-1">
+                    <AppSidebar />
+                    <SidebarInset>
+                      <SiteHeader />
+                      <div className="flex flex-col w-full min-h-screen">
+                        <main className="p-8 flex-grow">{children}</main>
+                        <Footer />
+                      </div>
+                    </SidebarInset>
+                  </div>
+                </SidebarProvider>
+              </TooltipProvider>
               <Toaster />
-              <SidebarProvider
-                defaultOpen={defaultOpen}
-                className="flex flex-col"
-              >
-                <div className="flex flex-1">
-                  <AppSidebar />
-                  <SidebarInset>
-                    <SiteHeader />
-                    <div className="flex flex-col w-full min-h-screen">
-                      <main className="p-8 flex-grow">{children}</main>
-                      <Footer />
-                    </div>
-                  </SidebarInset>
-                </div>
-              </SidebarProvider>
-            </TooltipProvider>
-            <Toaster />
-          </ThemeProvider>
-        </ContractsProvider>
+            </ThemeProvider>
+          </ContractsProvider>
+        </AuthProvider>
       </body>
     </html>
   );

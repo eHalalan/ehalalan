@@ -1,7 +1,3 @@
-'server-only';
-
-'use server';
-
 import { ethers } from 'ethers';
 
 export async function verifySignature(
