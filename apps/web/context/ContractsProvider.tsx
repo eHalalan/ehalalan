@@ -114,15 +114,8 @@ export const ContractsProvider = ({
   };
 
   useEffect(() => {
-    const handleAccountsChanged = (accounts: string[]) => {
-      if (accounts.length === 0) {
-        localStorage.removeItem('isWalletConnected');
-        setAccount('');
-        setSigner(null);
-        setProvider(null);
-      } else {
-        setAccount(accounts[0]);
-      }
+    const handleAccountsChanged = () => {
+      disconnectWallet();
     };
 
     window.ethereum.on('accountsChanged', handleAccountsChanged);
