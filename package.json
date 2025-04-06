@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/eHalalan/ehalalan#readme",
   "dependencies": {
+    "firebase-config": "^1.0.0",
     "hardhat": "^2.22.19"
   }
 }

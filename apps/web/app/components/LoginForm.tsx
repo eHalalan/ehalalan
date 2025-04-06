@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import logo from '../assets/logo.png';
 // import { registerVoter } from '../../services/votersRegistry';
+import { loginUser } from '@/services/models/Auth';
 
 interface LoginData {
   email: string;
@@ -28,34 +29,27 @@ const LoginForm: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
+    console.log('🟢 Native form submit event fired in LOGIN');
     e.preventDefault();
     console.log('Login submitted:', loginData);
     // Here you would typically authenticate the user
+    try {
+      console.log('Attempting login with:', loginData.email);
+      const userId = await loginUser(loginData.email, loginData.password);
+      console.log('Login successful, user ID:', userId);
+
+      // Redirect to dashboard or protected page
+      router.push('/dashboard');
+    } catch (error) {
+      console.error('Login failed:', error);
+      // setError(error.message);
+    }
   };
 
   const navigateToRegister = (): void => {
     router.push('/register'); // Adjust this path to match your app's routing
   };
-
-  // const exampleVoterAddress = '0x71C7656EC7ab88b098defB751B7401B5f6d8976F'; // Sample Ethereum address
-  // const exampleFullName = 'Maria Santos';
-
-  // // Execute the registration
-  // registerVoter(exampleVoterAddress, exampleFullName)
-  //   .then((docRef) => {
-  //     console.log(`Voter registered with ID: ${docRef.id}`);
-  //     console.log('Details:', {
-  //       address: exampleVoterAddress,
-  //       name: exampleFullName,
-  //       timestamp: new Date().toISOString(),
-  //     });
-  //   })
-  //   .catch((error) => {
-  //     console.error('Registration failed:', error);
-  //   });
-
-  // registerVoter(exampleVoterAddress, exampleFullName);
 
   return (
     <div className="w-full flex flex-col items-center p-4 pt-5">

@@ -1,4 +1,7 @@
+// services/auth.js
 'use client';
+
+import { initializeApp, getApps } from 'firebase/app';
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -6,84 +9,133 @@ import {
   signOut,
   onAuthStateChanged,
 } from 'firebase/auth';
-// import { collection, getDocs } from 'firebase/firestore';
-// import db from '.database'; // Assuming your Firestore instance is correctly initialized in this file
 import { useState, useEffect, useContext, createContext } from 'react';
 
-// Initialize Firebase Auth
-export const auth = getAuth();
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+};
 
-// Create an Auth Context
-const AuthContext = createContext(null);
+// Initialize Firebase only once
+let app;
+export let auth;
+
+if (typeof window !== 'undefined') {
+  if (!getApps().length) {
+    app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+  } else {
+    app = getApps()[0];
+    auth = getAuth(app);
+  }
+}
+
+// Create Auth Context
+const AuthContext = createContext({
+  currentUser: null,
+  loading: true,
+});
 
 export const useAuth = () => useContext(AuthContext);
 
-// Create an AuthProvider to wrap the app
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
-  const auth = getAuth();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!auth) {
+      setLoading(false);
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user); // Set the user in state when the auth state changes
+      setCurrentUser(user);
+      setLoading(false);
     });
 
-    // Cleanup subscription on unmount
     return () => unsubscribe();
-  }, [auth]);
+  }, []);
+
+  const value = {
+    currentUser,
+    loading,
+  };
 
   return (
-    <AuthContext.Provider value={currentUser}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={value}>
+      {!loading && children}
+    </AuthContext.Provider>
   );
 };
 
-// Function to create a new user with email and password
-export async function registerUser(email, password) {
-  console.log('inside register');
-  try {
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    const user = userCredential.user;
-    console.log('User registered:', user);
-    return user;
-  } catch (error) {
-    console.error('Error registering user:', error.code, error.message);
-    throw error; // Re-throwing the error to be handled by the calling code
+// Authentication functions
+export const authService = {
+  registerUser: async (email, password) => {
+    try {
+      if (!auth) throw new Error('Firebase Auth not initialized');
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      return userCredential.user;
+    } catch (error) {
+      console.error('Registration error:', error.code, error.message);
+      throw formatAuthError(error);
+    }
+  },
+
+  loginUser: async (email, password) => {
+    try {
+      if (!auth) throw new Error('Firebase Auth not initialized');
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      return userCredential.user;
+    } catch (error) {
+      console.error('Login error:', error.code, error.message);
+      throw formatAuthError(error);
+    }
+  },
+
+  logoutUser: async () => {
+    try {
+      if (!auth) throw new Error('Firebase Auth not initialized');
+      await signOut(auth);
+    } catch (error) {
+      console.error('Logout error:', error.code, error.message);
+      throw formatAuthError(error);
+    }
+  },
+};
+
+// Helper function to format auth errors
+function formatAuthError(error) {
+  switch (error.code) {
+    case 'auth/invalid-email':
+      return new Error('Invalid email address');
+    case 'auth/user-disabled':
+      return new Error('This account has been disabled');
+    case 'auth/user-not-found':
+      return new Error('No account found with this email');
+    case 'auth/wrong-password':
+      return new Error('Incorrect password');
+    case 'auth/email-already-in-use':
+      return new Error('Email already in use');
+    case 'auth/operation-not-allowed':
+      return new Error('Email/password accounts are not enabled');
+    case 'auth/weak-password':
+      return new Error('Password should be at least 6 characters');
+    case 'auth/too-many-requests':
+      return new Error('Too many attempts. Please try again later');
+    default:
+      return new Error('Authentication failed. Please try again');
   }
 }
-
-// Function to log in a user with email and password
-export async function loginUser(email, password) {
-  console.log('inside login');
-  try {
-    console.log('Email:', email, 'Password:', password); // Check if email and password are correct
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    const user = userCredential.user;
-    console.log('User signed in:', user);
-    return user;
-  } catch (error) {
-    console.error('Error during login:', error.message);
-    throw error; // Pass the error up to be handled by the calling code
-  }
-}
-
-// Function to log out the current user
-export async function logoutUser() {
-  try {
-    await signOut(auth);
-    console.log('User signed out successfully.');
-    window.location.href = '/';
-  } catch (error) {
-    console.error('Error signing out:', error);
-    throw error;
-  }
-}
-
-export default { registerUser, loginUser, logoutUser };
