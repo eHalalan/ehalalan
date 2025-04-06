@@ -47,7 +47,6 @@ export const ContractsProvider = ({
       setIsLoading(true);
 
       if (!currentUser) {
-        toast.error('Please ensure that you have registered.');
         return;
       }
 
@@ -95,11 +94,16 @@ export const ContractsProvider = ({
         }
       }
 
-      const votersCol = collection(db, 'registry');
-      const voterDoc = doc(votersCol, currentUser.uid);
-      await updateDoc(voterDoc, { wallet: address });
+      const isVerified = localStorage.getItem('isWalletConnected');
+
+      if (!isVerified) {
+        const votersCol = collection(db, 'registry');
+        const voterDoc = doc(votersCol, currentUser.uid);
+        await updateDoc(voterDoc, { wallet: address });
+      }
 
       localStorage.setItem('isWalletConnected', 'true');
+      localStorage.setItem('isVerified', 'true');
     } catch (error) {
       console.error('Error connecting to wallet:', error);
       toast.error('Error connecting to wallet');
@@ -116,6 +120,7 @@ export const ContractsProvider = ({
       setSigner(null);
       setProvider(null);
       localStorage.removeItem('isWalletConnected');
+      localStorage.removeItem('isVerified');
     } catch (error) {
       console.error('Error disconnecting to wallet:', error);
       toast.error('Error disconnecting to wallet');
@@ -134,7 +139,7 @@ export const ContractsProvider = ({
     return () => {
       window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
     };
-  }, []);
+  }, [currentUser]);
 
   useEffect(() => {
     const reconnectWallet = async () => {
@@ -144,7 +149,7 @@ export const ContractsProvider = ({
       }
     };
     reconnectWallet();
-  }, []);
+  }, [currentUser]);
 
   return (
     <ContractsContext.Provider
