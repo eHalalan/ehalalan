@@ -1,11 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { H2, H3 } from '@/components/ui/headings';
 import { UserGreeting } from './UserGreeting';
 
@@ -46,7 +41,9 @@ export default function DashboardPage() {
           <div className="space-y-2">
             <H3>STEP 1 Register an account</H3>
             <ol className="list-decimal list-inside pl-5 space-y-1">
-              <li>Fill out the registration form with your personal details.</li>
+              <li>
+                Fill out the registration form with your personal details.
+              </li>
               <li>Submit the form and wait account verification.</li>
             </ol>
           </div>
@@ -77,8 +74,14 @@ export default function DashboardPage() {
             <H3>STEP 4 View Results</H3>
             <ol className="list-decimal list-inside pl-5 space-y-1">
               <li>Go to the Results page.</li>
-              <li>You'll see the real-time or final tally of votes as stored on the blockchain.</li>
-              <li>Results update dynamically as new votes are submitted and confirmed.</li>
+              <li>
+                You&apos;ll see the real-time or final tally of votes as stored
+                on the blockchain.
+              </li>
+              <li>
+                Results update dynamically as new votes are submitted and
+                confirmed.
+              </li>
             </ol>
           </div>
         </CardContent>
@@ -91,10 +94,10 @@ export default function DashboardPage() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-            <ol className="list-decimal list-inside pl-5 space-y-1">
-              <li>Double-check your ballot before submitting.</li>
-              <li>You can vote only once.</li>
-            </ol>
+          <ol className="list-decimal list-inside pl-5 space-y-1">
+            <li>Double-check your ballot before submitting.</li>
+            <li>You can vote only once.</li>
+          </ol>
         </CardContent>
       </Card>
     </div>
