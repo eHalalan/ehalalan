@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { ethers } from "ethers";
+import { ethers } from 'ethers';
 import { toast } from 'sonner';
 import { verifySignature } from '../lib/contracts/verifySignature';
 import { AuthContext } from '@/services/models/Auth';
@@ -47,7 +47,6 @@ export const ContractsProvider = ({
       setIsLoading(true);
 
       if (!currentUser) {
-        toast.error('Please ensure that you have registered.');
         return;
       }
 
@@ -95,11 +94,16 @@ export const ContractsProvider = ({
         }
       }
 
-      const votersCol = collection(db, 'registry');
-      const voterDoc = doc(votersCol, currentUser.uid);
-      await updateDoc(voterDoc, { wallet: address });
+      const isVerified = localStorage.getItem('isWalletConnected');
+
+      if (!isVerified) {
+        const votersCol = collection(db, 'registry');
+        const voterDoc = doc(votersCol, currentUser.uid);
+        await updateDoc(voterDoc, { wallet: address });
+      }
 
       localStorage.setItem('isWalletConnected', 'true');
+      localStorage.setItem('isVerified', 'true');
     } catch (error) {
       console.error('Error connecting to wallet:', error);
       toast.error('Error connecting to wallet');
@@ -116,6 +120,7 @@ export const ContractsProvider = ({
       setSigner(null);
       setProvider(null);
       localStorage.removeItem('isWalletConnected');
+      localStorage.removeItem('isVerified');
     } catch (error) {
       console.error('Error disconnecting to wallet:', error);
       toast.error('Error disconnecting to wallet');
@@ -124,22 +129,24 @@ export const ContractsProvider = ({
     }
   };
 
-useEffect(() => {
-  // Check if window.ethereum exists before trying to use it
-  if (window.ethereum && window.ethereum.on) {
-    const handleAccountsChanged = () => {
-      disconnectWallet();
-    };
+  useEffect(() => {
+    // Check if window.ethereum exists before trying to use it
+    if (window.ethereum && window.ethereum.on) {
+      const handleAccountsChanged = () => {
+        disconnectWallet();
+      };
 
-    window.ethereum.on('accountsChanged', handleAccountsChanged);
-
-    return () => {
-      if (window.ethereum && window.ethereum.removeListener) {
-        window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
-      }
-    };
-  }
-}, []);
+      window.ethereum.on('accountsChanged', handleAccountsChanged);
+      return () => {
+        if (window.ethereum && window.ethereum.removeListener) {
+          window.ethereum.removeListener(
+            'accountsChanged',
+            handleAccountsChanged
+          );
+        }
+      };
+    }
+  }, [currentUser]);
 
   useEffect(() => {
     const reconnectWallet = async () => {
@@ -149,7 +156,7 @@ useEffect(() => {
       }
     };
     reconnectWallet();
-  }, []);
+  }, [currentUser]);
 
   return (
     <ContractsContext.Provider

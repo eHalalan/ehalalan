@@ -42,8 +42,8 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ContractsProvider>
-          <AuthProvider>
+        <AuthProvider>
+          <ContractsProvider>
             <ThemeProvider
               attribute="class"
               defaultTheme="light"
@@ -70,8 +70,8 @@ export default async function RootLayout({
               </TooltipProvider>
               <Toaster />
             </ThemeProvider>
-          </AuthProvider>
-        </ContractsProvider>
+          </ContractsProvider>
+        </AuthProvider>
       </body>
     </html>
   );
