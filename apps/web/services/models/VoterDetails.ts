@@ -30,7 +30,7 @@ export function formToVoterDetails(
     email: formData.email,
     placeOfBirth: formData.placeOfBirth,
     dateOfBirth: formData.dateOfBirth,
-    verified: false, // Default to unverified
+    verified: false, // Default to verified :>>
     registrationDate: Timestamp.now().toString(),
     lastUpdated: Timestamp.now().toString(),
   };

@@ -18,15 +18,13 @@ export let auth: Auth;
 export let db: Firestore;
 let app: FirebaseApp;
 
-if (typeof window !== 'undefined') {
-  // Initialize Firebase app if not already initialized
-  if (!getApps().length) {
-    app = initializeApp(firebaseConfig);
-    auth = getAuth(app);
-    db = getFirestore(app);
-  } else {
-    app = getApp(); // Get existing app instance
-    auth = getAuth(app);
-    db = getFirestore(app);
-  }
+// Initialize Firebase app if not already initialized
+if (!getApps().length) {
+  app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  db = getFirestore(app);
+} else {
+  app = getApp(); // Get existing app instance
+  auth = getAuth(app);
+  db = getFirestore(app);
 }
