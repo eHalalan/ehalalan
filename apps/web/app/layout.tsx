@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Montserrat, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { cookies } from 'next/headers';
 import { ThemeProvider } from '@/context/ThemeProvider';
@@ -10,8 +10,8 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { Footer } from '@/components/footer/Footer';
 import { SiteHeader } from '@/components/nav/SiteHeader';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const montserrat = Montserrat({
+  variable: '--font-montserrat',
   subsets: ['latin'],
 });
 
@@ -38,7 +38,7 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${montserrat.variable} ${geistMono.variable} antialiased`}
       >
         <ThemeProvider
           attribute="class"

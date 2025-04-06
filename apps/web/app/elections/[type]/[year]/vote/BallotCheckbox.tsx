@@ -12,7 +12,7 @@ function BallotCheckbox({
     <CheckboxPrimitive.Root
       data-slot="checkbox"
       className={cn(
-        'w-8 h-6 rounded-[50%] border-2 border-foreground',
+        'min-w-8 w-8 h-6 rounded-[50%] border-2 border-foreground',
         'data-[state=checked]:bg-foreground data-[state=checked]:border-foreground',
         'data-[state=checked]:text-foreground',
         'transition-all duration-300 ease-in-out',
