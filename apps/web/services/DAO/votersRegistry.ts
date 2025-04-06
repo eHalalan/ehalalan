@@ -30,8 +30,6 @@ export async function registerVoterDetails(
 }
 
 export async function isVoterVerified(address: string): Promise<boolean> {
-  // const voterDoc = doc(votersCol, address);
-
   const voterQuery = query(votersCol, where('wallet', '==', address), limit(1));
   const res = await getDocs(voterQuery);
 
