@@ -4,11 +4,9 @@ import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import logo from '../assets/logo.png';
-import { doc, updateDoc } from 'firebase/firestore';
-import { Timestamp } from 'firebase/firestore';
 import { formToVoterDetails } from '@/services/models/VoterDetails';
 import { registerUser } from '@/services/models/Auth';
-import { db } from '@/services/database';
+import { registerVoterDetails } from '@/services/DAO/votersRegistry';
 
 interface FormData {
   email: string;
@@ -41,23 +39,23 @@ const RegistrationForm: React.FC = () => {
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
-    console.log('🟢 Native form submit event fired');
     e.preventDefault();
-    console.log('inside submit 👍👍👍👍👍👍👍');
-    console.log('Form submitted:', formData);
 
     if (!formData) return;
 
     try {
       const email = formData.email;
       const password = formData.password;
+
       const uid = await registerUser({ email, password });
       const updates = formToVoterDetails(formData, uid);
-      await updateDoc(doc(db, 'voters', uid), {
-        ...updates,
-        lastUpdated: Timestamp.now(),
-      });
-      console.log('Profile updated successfully');
+
+      const voter = await registerVoterDetails(updates);
+      if (voter) {
+        // Redirect to dashboard or protected page
+        router.push('/dashboard');
+      }
+      // insert desired effect for failed registration
     } catch (error) {
       console.error('Update failed:', error);
     }

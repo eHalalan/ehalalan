@@ -30,17 +30,18 @@ const LoginForm: React.FC = () => {
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
-    console.log('🟢 Native form submit event fired in LOGIN');
     e.preventDefault();
-    console.log('Login submitted:', loginData);
+
     // Here you would typically authenticate the user
     try {
       console.log('Attempting login with:', loginData.email);
       const userId = await loginUser(loginData.email, loginData.password);
       console.log('Login successful, user ID:', userId);
-
-      // Redirect to dashboard or protected page
-      router.push('/dashboard');
+      if (userId) {
+        // Redirect to dashboard or protected page
+        router.push('/dashboard');
+      }
+      // insert desired effect for failed login
     } catch (error) {
       console.error('Login failed:', error);
       // setError(error.message);
