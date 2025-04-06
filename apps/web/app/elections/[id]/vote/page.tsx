@@ -1,34 +1,41 @@
 import React from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { ElectionType } from '@/types/election';
 import { getElection } from '@/lib/election';
 import { Ballot } from './Ballot';
 import { Button } from '@/components/ui/button';
 
 interface Props {
   params: Promise<{
-    type: string;
-    year: string;
+    id: string;
   }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const resolvedParams = await params;
-  const type = resolvedParams.type as ElectionType;
-  const year = parseInt(resolvedParams.year);
+  const id = resolvedParams.id;
+
+  const election = await getElection(id);
+
+  if (!election) {
+    return {
+      title: 'Error',
+      description: 'Election does not exist.',
+    };
+  }
+  const year = new Date(election.endDate).getFullYear();
 
   return {
-    title: `${year} ${type} Election | Vote`,
-    description: `Vote in eHalalan Election ${year} ${type}`,
+    title: `${year} ${election.type} Election | Vote`,
+    description: `Vote in eHalalan Election ${year} ${election.type}`,
   };
 }
 
 export default async function ElectionPage({ params }: Props) {
   const resolvedParams = await params;
-  const type = resolvedParams.type as ElectionType;
-  const year = parseInt(resolvedParams.year);
-  const election = await getElection(type, year);
+  const id = resolvedParams.id;
+
+  const election = await getElection(id);
 
   if (!election) {
     return (
@@ -46,13 +53,7 @@ export default async function ElectionPage({ params }: Props) {
       <div className="w-full h-full flex flex-col gap-2 items-center justify-center">
         <h2 className="text-xl font-bold">Election has ended</h2>
         <Button asChild>
-          <Link
-            href={`/elections/${
-              election.type
-            }/${election.endDate.getFullYear()}`}
-          >
-            Go Back
-          </Link>
+          <Link href={`/elections/${election.id}`}>Go Back</Link>
         </Button>
       </div>
     );

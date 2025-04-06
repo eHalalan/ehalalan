@@ -8,6 +8,7 @@ import {
   where,
   limit,
   getDocs,
+  getCountFromServer,
 } from 'firebase/firestore';
 import { VoterDetails, VoterWithWallet } from '@/services/models/VoterDetails';
 const votersCol = collection(db, 'registry');
@@ -35,4 +36,12 @@ export async function isVoterVerified(address: string): Promise<boolean> {
   const res = await getDocs(voterQuery);
 
   return !res.empty;
+}
+
+export async function getNumRegisteredVoters(): Promise<number> {
+  const registeredVotersQuery = query(votersCol, where('verified', '==', true));
+  const numVoters = (await getCountFromServer(registeredVotersQuery)).data()
+    .count;
+
+  return numVoters;
 }
