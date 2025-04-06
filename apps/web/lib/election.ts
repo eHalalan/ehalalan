@@ -2,7 +2,7 @@ import { Election, ElectionType } from '@/types/election';
 
 const electionsDummyData: Election[] = [
   {
-    id: 1,
+    id: '1',
     isActive: true,
     endDate: new Date('2025-04-06'),
     type: ElectionType.NATIONAL,
@@ -32,7 +32,7 @@ const electionsDummyData: Election[] = [
     ],
   },
   {
-    id: 2,
+    id: '2',
     isActive: false,
     endDate: new Date('2024-04-06'),
     type: ElectionType.SENATORIAL,
