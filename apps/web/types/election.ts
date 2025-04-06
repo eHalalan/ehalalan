@@ -4,9 +4,9 @@ export enum ElectionType {
 }
 
 export interface Election {
-  id: number;
+  id: string;
   isActive: boolean;
-  endDate: Date;
+  endDate: string;
   type: ElectionType;
   presidents?: Candidate[];
   vicePresidents?: Candidate[];
@@ -17,4 +17,10 @@ export interface Candidate {
   name: string;
   party: string;
   voteCount: number;
+}
+
+export interface VoteData {
+  presidentVote: number;
+  vicePresidentVote: number;
+  senatorVotes: number[];
 }

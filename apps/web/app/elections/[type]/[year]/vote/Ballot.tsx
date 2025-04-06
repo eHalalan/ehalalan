@@ -32,7 +32,7 @@ export function Ballot({ election }: Props) {
   return (
     <div className="flex flex-col gap-3">
       <H1 className="text-center !text-2xl md:!text-3xl">
-        {election.endDate.getFullYear()} {election.type} Election
+        {new Date(election.endDate).getFullYear()} {election.type} Election
       </H1>
       <BallotInstructions />
 
@@ -62,7 +62,7 @@ export function BallotForm({ election }: { election: Election }) {
     console.log(formData);
     toast.success('You submitted your vote!\n');
     router.push(
-      `/elections/${election.type}/${election.endDate.getFullYear()}`
+      `/elections/${election.type}/${new Date(election.endDate).getFullYear()}`
     );
   }
 
