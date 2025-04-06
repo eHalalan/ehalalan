@@ -8,6 +8,8 @@ import {
   getDoc,
   runTransaction,
 } from 'firebase/firestore';
+import { BallotFactory } from '@/lib/contracts/factory';
+import { ethers } from 'ethers';
 
 const electionsCol = collection(db, 'elections');
 
@@ -29,7 +31,8 @@ export async function hasAlreadyVoted(id: string, voterWallet: string) {
 export async function vote(
   voterAddress: string,
   ballotAddress: string,
-  voteData: VoteData
+  voteData: VoteData,
+  signer: ethers.JsonRpcSigner
 ) {
   const electionDocRef = doc(electionsCol, ballotAddress);
   const electionDoc = await getDoc(electionDocRef);
@@ -58,6 +61,10 @@ export async function vote(
 
   const electionData = electionDoc.data() as Election;
   const { presidentVote, vicePresidentVote, senatorVotes } = voteData;
+
+  const ballot = BallotFactory(ballotAddress, signer);
+  await ballot.vote(presidentVote, vicePresidentVote, senatorVotes);
+
   // -1 or out of range just means abstain
   if (
     electionData.presidents &&
