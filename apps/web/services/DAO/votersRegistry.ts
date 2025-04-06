@@ -1,9 +1,8 @@
 import { db } from '../database';
-import { collection, doc, setDoc } from 'firebase/firestore';
-
+import { collection, doc, setDoc, DocumentReference } from 'firebase/firestore';
+import { VoterDetails } from '@/services/models/VoterDetails';
 const votersCol = collection(db, 'registry');
 
-// Register a new voter with additional information
 export async function registerVoterDetails({
   uid,
   fullName,
@@ -12,21 +11,22 @@ export async function registerVoterDetails({
   verified,
   registrationDate,
   lastUpdated,
-}) {
+}: VoterDetails): Promise<DocumentReference> {
   const voterDoc = doc(votersCol, uid);
 
-  // const birthDateTimestamp = Timestamp.fromDate(new Date(dateOfBirth));
   try {
     await setDoc(voterDoc, {
       fullName,
       placeOfBirth,
-      dateOfBirth,
+      dateOfBirth:
+        typeof dateOfBirth === 'string' ? dateOfBirth : dateOfBirth.toString(),
       verified,
-      registrationDate,
-      lastUpdated,
+      registrationDate: registrationDate.toString(),
+      lastUpdated: lastUpdated.toString(),
     });
     return voterDoc;
   } catch (error) {
     console.error('Registration to firebase failed:', error);
+    throw error;
   }
 }
