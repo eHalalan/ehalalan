@@ -73,5 +73,8 @@
     "tailwindcss": "^4",
     "tailwindcss-motion": "^1.1.0",
     "typescript": "^5"
+  },
+  "overrides": {
+    "react-is": "^19.0.0-rc-69d4b800-20241021"
   }
 }
