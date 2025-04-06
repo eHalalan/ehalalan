@@ -5,7 +5,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { HomeIcon, UserRoundIcon, VoteIcon } from 'lucide-react';
+import { HomeIcon, VoteIcon } from 'lucide-react';
 
 const items = [
   {
@@ -13,11 +13,7 @@ const items = [
     url: '/dashboard/',
     icon: HomeIcon,
   },
-  {
-    title: 'Profile',
-    url: '/profile/',
-    icon: UserRoundIcon,
-  },
+
   {
     title: 'Elections',
     url: '/elections/',

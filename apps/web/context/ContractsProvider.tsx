@@ -4,6 +4,9 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { ethers } from "ethers";
 import { toast } from 'sonner';
 import { verifySignature } from '../lib/contracts/verifySignature';
+import { AuthContext } from '@/services/models/Auth';
+import { db } from '@/services/database';
+import { collection, doc, updateDoc } from 'firebase/firestore';
 
 interface ContractsContextType {
   provider: ethers.BrowserProvider | null;
@@ -35,12 +38,18 @@ export const ContractsProvider = ({
   const [signer, setSigner] = useState<ethers.JsonRpcSigner | null>(null);
   const [account, setAccount] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const { currentUser } = useContext(AuthContext);
 
   const connectWallet = async () => {
     const isWalletConnected = localStorage.getItem('isWalletConnected');
 
     try {
       setIsLoading(true);
+
+      if (!currentUser) {
+        toast.error('Please ensure that you have registered.');
+        return;
+      }
 
       if (!window.ethereum) {
         toast.error(
@@ -62,15 +71,13 @@ export const ContractsProvider = ({
       const accounts = await window.ethereum.request({
         method: 'eth_accounts',
       });
-      if (accounts.length === 0) {
-        toast.error('Please log in to your Ethereum wallet');
-        return;
-      }
 
-      // Request account access if needed
-      window.ethereum.request({
-        method: 'eth_requestAccounts',
-      });
+      if (accounts.length === 0) {
+        // Request account access if needed
+        await window.ethereum.request({
+          method: 'eth_requestAccounts',
+        });
+      }
 
       const newSigner = await newProvider.getSigner();
       setSigner(newSigner);
@@ -87,6 +94,10 @@ export const ContractsProvider = ({
           return;
         }
       }
+
+      const votersCol = collection(db, 'registry');
+      const voterDoc = doc(votersCol, currentUser.uid);
+      await updateDoc(voterDoc, { wallet: address });
 
       localStorage.setItem('isWalletConnected', 'true');
     } catch (error) {
