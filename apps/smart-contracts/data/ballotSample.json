@@ -1,0 +1,19 @@
+{
+  "presidents": ["Alice", "Bob"],
+  "vicePresidents": ["Charlie", "Dave"],
+  "senators": [
+    "Earl",
+    "Frank",
+    "George",
+    "Harry",
+    "Irene",
+    "Jack",
+    "Karen",
+    "Larry",
+    "Mary",
+    "Nick",
+    "Oliver",
+    "Patrick",
+    "Quentin"
+  ]
+}
