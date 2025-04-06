@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { ethers } from 'ethers';
+import { ethers } from "ethers";
 import { toast } from 'sonner';
 import { verifySignature } from '../lib/contracts/verifySignature';
 
@@ -113,7 +113,9 @@ export const ContractsProvider = ({
     }
   };
 
-  useEffect(() => {
+useEffect(() => {
+  // Check if window.ethereum exists before trying to use it
+  if (window.ethereum && window.ethereum.on) {
     const handleAccountsChanged = () => {
       disconnectWallet();
     };
@@ -121,9 +123,12 @@ export const ContractsProvider = ({
     window.ethereum.on('accountsChanged', handleAccountsChanged);
 
     return () => {
-      window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
+      if (window.ethereum && window.ethereum.removeListener) {
+        window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
+      }
     };
-  }, []);
+  }
+}, []);
 
   useEffect(() => {
     const reconnectWallet = async () => {
