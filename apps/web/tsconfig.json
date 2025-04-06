@@ -29,8 +29,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "tailwindcss.config.ts",
-    "services/models/Auth.tsx",
+    "services/models/Auth.tsx"
   ],
   "exclude": ["node_modules"]
 }
