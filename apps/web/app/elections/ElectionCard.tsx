@@ -13,12 +13,12 @@ export function ElectionCard({ election }: Props) {
       <CardHeader className="mb-1">
         <CardTitle className="text-lg">
           <Link
-            href={`/elections/${
-              election.type
-            }/${election.endDate.getFullYear()}`}
+            href={`/elections/${election.type}/${new Date(
+              election.endDate
+            ).getFullYear()}`}
             className="hover:text-primary"
           >
-            {election.endDate.getFullYear()} {election.type} Election
+            {new Date(election.endDate).getFullYear()} {election.type} Election
           </Link>
         </CardTitle>
       </CardHeader>

@@ -4,7 +4,7 @@ const electionsDummyData: Election[] = [
   {
     id: '1',
     isActive: true,
-    endDate: new Date('2025-04-06'),
+    endDate: new Date('2025-04-06').toISOString(),
     type: ElectionType.NATIONAL,
     presidents: [
       { name: 'Alex', party: 'Partido', voteCount: 0 },
@@ -34,7 +34,7 @@ const electionsDummyData: Election[] = [
   {
     id: '2',
     isActive: false,
-    endDate: new Date('2024-04-06'),
+    endDate: new Date('2024-04-06').toISOString(),
     type: ElectionType.SENATORIAL,
     senators: [
       { name: 'Charlie', party: 'Partido', voteCount: 0 },
@@ -70,7 +70,8 @@ export async function getElection(
   const election =
     electionsDummyData.find(
       (election) =>
-        election.type === type && election.endDate.getFullYear() === year
+        election.type === type &&
+        new Date(election.endDate).getFullYear() === year
     ) || null;
 
   return new Promise((resolve) => {

@@ -21,7 +21,7 @@ export function ElectionStatusBadge({ election }: Props) {
         </Badge>
       </TooltipTrigger>
       <TooltipContent side="bottom">
-        {election.endDate.toLocaleDateString('en-US', {
+        {new Date(election.endDate).toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'short',
           day: 'numeric',
