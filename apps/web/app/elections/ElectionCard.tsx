@@ -13,9 +13,7 @@ export function ElectionCard({ election }: Props) {
       <CardHeader className="mb-1">
         <CardTitle className="text-lg">
           <Link
-            href={`/elections/${election.type}/${new Date(
-              election.endDate
-            ).getFullYear()}`}
+            href={`/elections/${election.id}`}
             className="hover:text-primary"
           >
             {new Date(election.endDate).getFullYear()} {election.type} Election

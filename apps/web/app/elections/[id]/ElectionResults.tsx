@@ -13,13 +13,11 @@ import { BarChart2Icon, UsersRoundIcon } from 'lucide-react';
 
 interface Props {
   election: Election;
+  voted: number;
+  registered: number;
 }
 
-// Dummy variables for voter turnout (change later)
-const voted = 54_321_234;
-const registered = 98_765_432;
-
-export function ElectionResults({ election }: Props) {
+export function ElectionResults({ election, voted, registered }: Props) {
   return (
     <div className="w-full sm:w-3/4 md:w-1/2 mx-auto p-1 space-y-8">
       <div className="py-4 flex flex-col justify-center bg-primary/10 text-primary text-center rounded-xl border-2 border-primary">

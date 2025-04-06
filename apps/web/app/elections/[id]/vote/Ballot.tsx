@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Election, ElectionType } from '@/types/election';
+import { Election, ElectionType, VoteData } from '@/types/election';
 import { toast } from 'sonner';
 import { electionVoteSchema } from '@/schemas/elections';
 import { BallotInstructions } from './BallotInstructions';
@@ -23,6 +23,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { CircleAlertIcon } from 'lucide-react';
+import { vote } from '@/services/ballot';
+import { useContracts } from '@/context/ContractsProvider';
 
 interface Props {
   election: Election;
@@ -45,6 +47,9 @@ export function Ballot({ election }: Props) {
 
 export function BallotForm({ election }: { election: Election }) {
   const requiredSelections = election.type === ElectionType.NATIONAL ? 14 : 12;
+  const { account } = useContracts();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
   const form = useForm<z.infer<typeof electionVoteSchema>>({
@@ -53,17 +58,45 @@ export function BallotForm({ election }: { election: Election }) {
 
   const [confirmVote, setConfirmVote] = useState(false);
 
-  function onSubmit(formData: z.infer<typeof electionVoteSchema>) {
+  async function onSubmit(formData: z.infer<typeof electionVoteSchema>) {
     if (!confirmVote) {
       toast.error('Please confirm your vote before submitting.');
       return;
     }
 
-    console.log(formData);
-    toast.success('You submitted your vote!\n');
-    router.push(
-      `/elections/${election.type}/${new Date(election.endDate).getFullYear()}`
-    );
+    if (!account) {
+      toast.error('Please connect your wallet.');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+
+      const voteData: VoteData = {
+        presidentVote: -1,
+        vicePresidentVote: -1,
+        senatorVotes: formData.senators,
+      };
+
+      if (formData.presidents) {
+        voteData.presidentVote = formData.presidents[0];
+      }
+      if (formData.vicePresidents) {
+        voteData.vicePresidentVote = formData.vicePresidents[0];
+      }
+
+      console.log(voteData);
+      await vote(account, election.id, voteData);
+      toast.success('You submitted your vote!\n');
+      router.push(`/elections/${election.id}`);
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -195,7 +228,9 @@ export function BallotForm({ election }: { election: Election }) {
               </label>
             </div>
 
-            <Button type="submit">Submit Vote</Button>
+            <Button type="submit" disabled={isLoading}>
+              Submit Vote
+            </Button>
           </div>
         </div>
       </form>

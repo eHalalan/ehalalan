@@ -1,9 +1,30 @@
 import { Election, VoteData } from '@/types/election';
 import { db } from './database';
 import { isVoterVerified } from './DAO/votersRegistry';
-import { collection, doc, getDoc, runTransaction } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getCountFromServer,
+  getDoc,
+  runTransaction,
+} from 'firebase/firestore';
 
 const electionsCol = collection(db, 'elections');
+
+export async function hasAlreadyVoted(id: string, voterWallet: string) {
+  const electionDocRef = doc(electionsCol, id);
+  const electionDoc = await getDoc(electionDocRef);
+
+  if (!electionDoc.exists()) {
+    throw new Error("Election doesn't exist.");
+  }
+
+  const electionVotersColRef = collection(electionDocRef, 'voters');
+  const voterDocRef = doc(electionVotersColRef, voterWallet);
+  const voterDoc = await getDoc(voterDocRef);
+
+  return voterDoc.exists();
+}
 
 export async function vote(
   voterAddress: string,
@@ -69,4 +90,19 @@ export async function vote(
 
     t.update(electionDocRef, { ...electionData });
   });
+}
+
+export async function getNumVoted(id: string): Promise<number> {
+  const electionDocRef = doc(electionsCol, id);
+  const electionDoc = await getDoc(electionDocRef);
+
+  if (!electionDoc.exists()) {
+    throw new Error("Election doesn't exist.");
+  }
+
+  const electionVotersColRef = collection(electionDocRef, 'voters');
+  const numVoted = (await getCountFromServer(electionVotersColRef)).data()
+    .count;
+
+  return numVoted;
 }
