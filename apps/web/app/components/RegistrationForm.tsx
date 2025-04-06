@@ -4,6 +4,9 @@ import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import logo from '../assets/logo.png';
+import { formToVoterDetails } from '@/services/models/VoterDetails';
+import { registerUser } from '@/services/models/Auth';
+import { registerVoterDetails } from '@/services/DAO/votersRegistry';
 
 interface FormData {
   email: string;
@@ -35,9 +38,28 @@ const RegistrationForm: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+
+    if (!formData) return;
+
+    try {
+      const email = formData.email;
+      const password = formData.password;
+
+      const uid = await registerUser({ email, password });
+      const updates = formToVoterDetails(formData, uid);
+
+      const voter = await registerVoterDetails(updates);
+      if (voter) {
+        // Redirect to dashboard or protected page
+        router.push('/dashboard');
+      }
+      // insert desired effect for failed registration
+    } catch (error) {
+      console.error('Update failed:', error);
+    }
+
     // Here you would typically register the user and redirect to login
   };
 

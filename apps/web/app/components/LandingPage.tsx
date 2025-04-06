@@ -4,6 +4,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import logo from '../assets/logo.png';
+// import { db } from '@/services/database';
 
 const LandingPage: React.FC = () => {
   const router = useRouter();

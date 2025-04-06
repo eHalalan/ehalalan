@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import logo from '../assets/logo.png';
 // import { registerVoter } from '../../services/votersRegistry';
+import { loginUser } from '@/services/models/Auth';
 
 interface LoginData {
   email: string;
@@ -28,44 +29,35 @@ const LoginForm: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    console.log('Login submitted:', loginData);
 
-    const userName = loginData.email.split('@')[0];
-    const userData = {
-      email: loginData.email,
-      name: userName.charAt(0).toUpperCase() + userName.slice(1),
-      isLoggedIn: true
-    };
+    // const userName = loginData.email.split('@')[0];
+    // const userData = {
+    //   email: loginData.email,
+    //   name: userName.charAt(0).toUpperCase() + userName.slice(1),
+    //   isLoggedIn: true,
+    // };
 
-    localStorage.setItem('userData', JSON.stringify(userData));
-
-    router.push('/dashboard');
+    try {
+      console.log('Attempting login with:', loginData.email);
+      const userId = await loginUser(loginData.email, loginData.password);
+      console.log('Login successful, user ID:', userId);
+      if (userId) {
+        // localStorage.setItem('userData', JSON.stringify(userData));
+        // Redirect to dashboard or protected page
+        router.push('/dashboard');
+      }
+      // insert desired effect for failed login
+    } catch (error) {
+      console.error('Login failed:', error);
+      // setError(error.message);
+    }
   };
 
   const navigateToRegister = (): void => {
     router.push('/register');
   };
-
-  // const exampleVoterAddress = '0x71C7656EC7ab88b098defB751B7401B5f6d8976F'; // Sample Ethereum address
-  // const exampleFullName = 'Maria Santos';
-
-  // // Execute the registration
-  // registerVoter(exampleVoterAddress, exampleFullName)
-  //   .then((docRef) => {
-  //     console.log(`Voter registered with ID: ${docRef.id}`);
-  //     console.log('Details:', {
-  //       address: exampleVoterAddress,
-  //       name: exampleFullName,
-  //       timestamp: new Date().toISOString(),
-  //     });
-  //   })
-  //   .catch((error) => {
-  //     console.error('Registration failed:', error);
-  //   });
-
-  // registerVoter(exampleVoterAddress, exampleFullName);
 
   return (
     <div className="w-full flex flex-col items-center p-4 pt-5">
