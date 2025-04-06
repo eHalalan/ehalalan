@@ -1,4 +1,3 @@
-import firestore from 'firebase/firestore';
 import { Timestamp } from 'firebase/firestore';
 
 export interface VoterDetails {
@@ -6,17 +5,17 @@ export interface VoterDetails {
   fullName: string;
   email: string; // Duplicated from auth for querying
   placeOfBirth: string;
-  dateOfBirth: firestore.Timestamp;
+  dateOfBirth: string;
   verified: boolean;
-  registrationDate: firestore.Timestamp;
-  lastUpdated: firestore.Timestamp;
+  registrationDate: string;
+  lastUpdated: string;
 }
 
 export interface VoterFormData {
   fullName: string;
   email: string;
   placeOfBirth: string;
-  dateOfBirth: Date | string; // Can handle both Date object or ISO string
+  dateOfBirth: string; // Can handle both Date object or ISO string
   // No need for uid, verified, or timestamps here
 }
 
@@ -30,10 +29,10 @@ export function formToVoterDetails(
     fullName: formData.fullName,
     email: formData.email,
     placeOfBirth: formData.placeOfBirth,
-    dateOfBirth: toFirestoreTimestamp(formData.dateOfBirth),
+    dateOfBirth: formData.dateOfBirth,
     verified: false, // Default to unverified
-    registrationDate: Timestamp.now(),
-    lastUpdated: Timestamp.now(),
+    registrationDate: Timestamp.now().toString(),
+    lastUpdated: Timestamp.now().toString(),
   };
 }
 
@@ -43,12 +42,12 @@ export function voterDetailsToForm(voterDetails: VoterDetails): VoterFormData {
     fullName: voterDetails.fullName,
     email: voterDetails.email,
     placeOfBirth: voterDetails.placeOfBirth,
-    dateOfBirth: voterDetails.dateOfBirth.toDate(), // Convert to JS Date
+    dateOfBirth: voterDetails.dateOfBirth, // Convert to JS Date
   };
 }
 
 // Helper to convert various date formats to Firestore Timestamp
-function toFirestoreTimestamp(dateInput: Date | string): Timestamp {
-  const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
-  return Timestamp.fromDate(date);
-}
+// function toFirestoreTimestamp(dateInput: Date | string): Timestamp {
+//   const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+//   return Timestamp.fromDate(date);
+// }

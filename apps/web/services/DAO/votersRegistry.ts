@@ -18,8 +18,7 @@ export async function registerVoterDetails({
     await setDoc(voterDoc, {
       fullName,
       placeOfBirth,
-      dateOfBirth:
-        typeof dateOfBirth === 'string' ? dateOfBirth : dateOfBirth.toString(),
+      dateOfBirth,
       verified,
       registrationDate: registrationDate.toString(),
       lastUpdated: lastUpdated.toString(),
