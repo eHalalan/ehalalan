@@ -140,10 +140,9 @@ const RegistrationForm: React.FC = () => {
           <div className="mb-2">
             <label className="block text-gray-700 mb-0">Date of Birth</label>
             <input
-              type="text"
+              type="date" // Changed from "text" to "date"
               name="dateOfBirth"
               className="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="YYYY - MM - DD"
               value={formData.dateOfBirth}
               onChange={handleChange}
               required
