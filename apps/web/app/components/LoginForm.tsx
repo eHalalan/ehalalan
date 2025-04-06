@@ -32,7 +32,16 @@ const LoginForm: React.FC = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
-    // Here you would typically authenticate the user
+    const userName = loginData.email.split('@')[0];
+    const userData = {
+      email: loginData.email,
+      name: userName.charAt(0).toUpperCase() + userName.slice(1),
+      isLoggedIn: true,
+    };
+
+    localStorage.setItem('userData', JSON.stringify(userData));
+
+    router.push('/dashboard');
     try {
       console.log('Attempting login with:', loginData.email);
       const userId = await loginUser(loginData.email, loginData.password);
@@ -49,7 +58,7 @@ const LoginForm: React.FC = () => {
   };
 
   const navigateToRegister = (): void => {
-    router.push('/register'); // Adjust this path to match your app's routing
+    router.push('/register');
   };
 
   return (

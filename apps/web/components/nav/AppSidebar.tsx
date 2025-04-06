@@ -18,7 +18,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-center w-full pt-6">
           {open && (
             <Link href="/">
               <Image src={logo} alt="eHalalan Logo" width={150} priority />
