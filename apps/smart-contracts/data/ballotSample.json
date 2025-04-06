@@ -1,19 +1,26 @@
 {
-  "presidents": ["Alice", "Bob"],
-  "vicePresidents": ["Charlie", "Dave"],
+  "presidents": [
+    { "name": "Alice", "party": "Independent" },
+    { "name": "Bob", "party": "Independent" }
+  ],
+  "vicePresidents": [
+    { "name": "Charlie", "party": "Independent" },
+    { "name": "Dave", "party": "Independent" }
+  ],
   "senators": [
-    "Earl",
-    "Frank",
-    "George",
-    "Harry",
-    "Irene",
-    "Jack",
-    "Karen",
-    "Larry",
-    "Mary",
-    "Nick",
-    "Oliver",
-    "Patrick",
-    "Quentin"
-  ]
+    { "name": "Earl", "party": "Independent" },
+    { "name": "Frank", "party": "Independent" },
+    { "name": "George", "party": "Independent" },
+    { "name": "Harry", "party": "Independent" },
+    { "name": "Irene", "party": "Independent" },
+    { "name": "Jack", "party": "Independent" },
+    { "name": "Karen", "party": "Independent" },
+    { "name": "Larry", "party": "Independent" },
+    { "name": "Mary", "party": "Independent" },
+    { "name": "Nick", "party": "Independent" },
+    { "name": "Oliver", "party": "Independent" },
+    { "name": "Patrick", "party": "Independent" },
+    { "name": "Quentin", "party": "Independent" }
+  ],
+  "type": "National"
 }
