@@ -1,8 +1,9 @@
 'use client';
 
-import Link from 'next/link';
-import { Button } from '../ui/button';
+// import Link from 'next/link';
+// import { Button } from '../ui/button';
 import { CustomSidebarTrigger } from './CustomSidebarTrigger';
+import { WalletConnectButton } from '../contracts/WalletConnectButton';
 
 export function SiteHeader() {
   return (
@@ -12,14 +13,15 @@ export function SiteHeader() {
           <CustomSidebarTrigger />
         </div>
 
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <Button size="sm" variant="outline" asChild>
             <Link href="/login">Log in</Link>
           </Button>
           <Button size="sm" asChild>
             <Link href="/register">Register</Link>
           </Button>
-        </div>
+        </div> */}
+        <WalletConnectButton />
       </div>
     </header>
   );
