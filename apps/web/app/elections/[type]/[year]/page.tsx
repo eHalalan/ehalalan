@@ -47,13 +47,13 @@ export default async function ElectionPage({ params }: Props) {
     <>
       <div className="mb-3 flex items-center justify-between gap-2">
         <H1 className="!text-4xl">
-          {election.endDate.getFullYear()} {election.type} Election
+          {new Date(election.endDate).getFullYear()} {election.type} Election
         </H1>
         <Button asChild disabled={!election.isActive}>
           <Link
-            href={`/elections/${
-              election.type
-            }/${election.endDate.getFullYear()}/vote`}
+            href={`/elections/${election.type}/${new Date(
+              election.endDate
+            ).getFullYear()}/vote`}
           >
             <VoteIcon /> Vote
           </Link>
@@ -67,7 +67,7 @@ export default async function ElectionPage({ params }: Props) {
           <div className="flex items-center gap-1">
             <Calendar1Icon size={16} />
             Ends in{' '}
-            {election.endDate.toLocaleDateString('en-US', {
+            {new Date(election.endDate).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'short',
               day: 'numeric',
