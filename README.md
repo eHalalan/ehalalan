@@ -19,6 +19,8 @@ apps/
   - [Next.js](https://nextjs.org/)
   - [Tailwind CSS](https://tailwindcss.com/)
   - [shadcn components](https://ui.shadcn.com/)
+- **Backend**:
+  - [Firebase](https://firebase.google.com/docs/)
 - **Wallet & Web3 Integration**:
   - [MetaMask](https://metamask.io/)
   - [ethers.js](https://docs.ethers.org/)
