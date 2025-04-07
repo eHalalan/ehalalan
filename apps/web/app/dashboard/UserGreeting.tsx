@@ -12,7 +12,7 @@ export function UserGreeting() {
   const [voter, setVoter] = useState<VoterWithWallet | null>(null);
 
   useEffect(() => {
-    if (currentUser) {
+    if (currentUser && currentUser.uid) {
       getVoter(currentUser.uid).then((voter) => setVoter(voter));
     }
   }, [currentUser]);

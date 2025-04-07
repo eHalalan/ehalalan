@@ -16,6 +16,11 @@ export async function getVoters(): Promise<VoterWithWallet[]> {
 }
 
 export async function getVoter(id: string): Promise<VoterWithWallet | null> {
+  if (!id) {
+    console.warn("getVoter called with empty ID");
+    return null;
+  }
+
   const votersCol = collection(db, 'registry');
   const voterDoc = doc(votersCol, id);
   const voter = await getDoc(voterDoc);
