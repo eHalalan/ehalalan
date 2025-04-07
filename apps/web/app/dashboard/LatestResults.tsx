@@ -24,7 +24,7 @@ export async function LatestResults() {
       </ExternalLink>
       <ElectionChart
         candidates={
-          latestElection.presidents?.length || 0 > 0
+          (latestElection.presidents?.length || 0) > 0
             ? latestElection.presidents || []
             : latestElection.senators
         }
