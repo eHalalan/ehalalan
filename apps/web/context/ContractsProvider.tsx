@@ -8,6 +8,7 @@ import { AuthContext } from '@/services/models/Auth';
 import { db } from '@/services/database';
 import { collection, doc, updateDoc } from 'firebase/firestore';
 import { RegistryFactory } from '@/lib/contracts/factory';
+import { isVoterVerified } from '@/services/DAO/votersRegistry';
 
 interface ContractsContextType {
   provider: ethers.BrowserProvider | null;
@@ -95,7 +96,8 @@ export const ContractsProvider = ({
         }
       }
 
-      const isVerified = localStorage.getItem('isVerified');
+      // const isVerified = localStorage.getItem('isVerified');
+      const isVerified = isVoterVerified(address);
 
       if (!isVerified && newSigner) {
         const registry = RegistryFactory(newSigner);
@@ -108,7 +110,6 @@ export const ContractsProvider = ({
       }
 
       localStorage.setItem('isWalletConnected', 'true');
-      localStorage.setItem('isVerified', 'true');
     } catch (error) {
       console.error('Error connecting to wallet:', error);
       toast.error('Error connecting to wallet');
@@ -125,7 +126,7 @@ export const ContractsProvider = ({
       setSigner(null);
       setProvider(null);
       localStorage.removeItem('isWalletConnected');
-      localStorage.removeItem('isVerified');
+      // localStorage.removeItem('isVerified');
     } catch (error) {
       console.error('Error disconnecting to wallet:', error);
       toast.error('Error disconnecting to wallet');
