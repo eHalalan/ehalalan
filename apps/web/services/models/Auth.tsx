@@ -7,6 +7,7 @@ import {
   onAuthStateChanged,
   getAuth,
   User,
+  signOut,
 } from 'firebase/auth';
 import { auth } from '../database'; // Your Firebase initialization file
 import { useState, useEffect, createContext, ReactNode } from 'react';
@@ -60,8 +61,8 @@ export async function registerUser(authData: AuthModel): Promise<string> {
 
     return userCredential.user.uid; // Return the UID of the newly created user
   } catch (error) {
-    const authError = error as AuthError;
-    throw handleAuthError(authError);
+    console.error('Registration error:', error);
+    throw handleAuthError(error as AuthError);
   }
 }
 
@@ -80,6 +81,15 @@ export async function loginUser(
     return userCredential.user.uid;
   } catch (error) {
     console.error('Login error:', error);
+    throw handleAuthError(error as AuthError);
+  }
+}
+
+export async function logoutUser(): Promise<void> {
+  try {
+    await signOut(auth);
+  } catch (error) {
+    console.error('Logout error:', error);
     throw handleAuthError(error as AuthError);
   }
 }

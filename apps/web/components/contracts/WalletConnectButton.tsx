@@ -1,7 +1,13 @@
 import { useContracts } from '../../context/ContractsProvider';
-import { LoadingButton } from '../ui/loading-button';
+import { ButtonProps, LoadingButton } from '../ui/loading-button';
+import { WalletIcon } from 'lucide-react';
 
-export function WalletConnectButton() {
+export function WalletConnectButton({
+  className,
+  variant = 'outline',
+  size = 'sm',
+  ...props
+}: ButtonProps) {
   const { account, connectWallet, disconnectWallet, isLoading } =
     useContracts();
 
@@ -9,21 +15,26 @@ export function WalletConnectButton() {
     <>
       {account ? (
         <LoadingButton
-          variant="outline"
-          size="sm"
+          variant={variant}
+          size={size}
           onClick={disconnectWallet}
           loading={isLoading}
+          className={className}
+          {...props}
         >
-          Disconnect {account.slice(0, 12)}...
+          <WalletIcon /> {isLoading ? 'Disconnecting...' : 'Disconnect'}{' '}
+          {account.slice(0, 12)}...
         </LoadingButton>
       ) : (
         <LoadingButton
-          variant="outline"
-          size="sm"
+          variant={variant}
+          size={size}
           onClick={async () => connectWallet()}
           loading={isLoading}
+          className={className}
+          {...props}
         >
-          {isLoading ? 'Connecting...' : 'Connect Wallet'}
+          <WalletIcon /> {isLoading ? 'Connecting...' : 'Connect'} Wallet
         </LoadingButton>
       )}
     </>
