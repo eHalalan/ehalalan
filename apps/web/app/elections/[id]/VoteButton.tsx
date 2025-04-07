@@ -25,8 +25,10 @@ function VoteButton({ election }: PropsInterface) {
       setHasVoted(res);
     }
 
-    checkIfVoted();
-  }, []);
+    if (account) {
+      checkIfVoted();
+    }
+  }, [account]);
 
   const disabled = !election.isActive || hasVoted;
 
@@ -34,8 +36,9 @@ function VoteButton({ election }: PropsInterface) {
     <Button
       asChild
       onClick={() => {
-        if (hasVoted) toast.error('You have already voted.');
         if (!election.isActive) toast.error('This election is not active.');
+        else if (!account) toast.error('Please connect your wallet.');
+        else if (hasVoted && account) toast.error('You have already voted.');
       }}
       className={cn(disabled && 'bg-gray-400 hover:bg-gray-400/50')}
     >

@@ -32,7 +32,7 @@ export function formToVoterDetails(
     email: formData.email,
     placeOfBirth: formData.placeOfBirth,
     dateOfBirth: formData.dateOfBirth,
-    verified: true, // Default to verified :>>
+    verified: false, // Default to NOT verified :>>
     registrationDate: new Date().toISOString(),
     lastUpdated: new Date().toISOString(),
   };

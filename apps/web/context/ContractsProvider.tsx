@@ -8,7 +8,7 @@ import { AuthContext } from '@/services/models/Auth';
 import { db } from '@/services/database';
 import { collection, doc, updateDoc } from 'firebase/firestore';
 import { RegistryFactory } from '@/lib/contracts/factory';
-import { isVoterVerified } from '@/services/DAO/votersRegistry';
+import { getVoter } from '@/lib/voters';
 
 interface ContractsContextType {
   provider: ethers.BrowserProvider | null;
@@ -48,7 +48,7 @@ export const ContractsProvider = ({
     try {
       setIsLoading(true);
 
-      if (!currentUser) {
+      if (!currentUser?.uid) {
         return;
       }
 
@@ -96,17 +96,26 @@ export const ContractsProvider = ({
         }
       }
 
-      // const isVerified = localStorage.getItem('isVerified');
-      const isVerified = isVoterVerified(address);
+      const voter = await getVoter(currentUser.uid);
 
-      if (!isVerified && newSigner) {
+      if (!voter) {
+        throw new Error('Voter not found.'); // Impossible case
+      }
+
+      if (!voter.verified && newSigner) {
         const registry = RegistryFactory(newSigner);
 
         await registry.registerVoter(currentUser.email);
 
         const votersCol = collection(db, 'registry');
         const voterDoc = doc(votersCol, currentUser.uid);
-        await updateDoc(voterDoc, { wallet: address });
+        await updateDoc(voterDoc, { wallet: address, verified: true });
+      }
+
+      if (voter.verified && voter.wallet !== address) {
+        toast.error('This account has already connected to another wallet.');
+        disconnectWallet();
+        return;
       }
 
       localStorage.setItem('isWalletConnected', 'true');
@@ -126,7 +135,6 @@ export const ContractsProvider = ({
       setSigner(null);
       setProvider(null);
       localStorage.removeItem('isWalletConnected');
-      // localStorage.removeItem('isVerified');
     } catch (error) {
       console.error('Error disconnecting to wallet:', error);
       toast.error('Error disconnecting to wallet');
