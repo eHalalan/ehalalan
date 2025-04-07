@@ -46,10 +46,12 @@ export function LoginForm() {
         router.push('/dashboard');
       }
     } catch (error) {
-      form.setError('root', {
-        type: 'manual',
-        message: error?.toString(),
-      });
+      if (error instanceof Error) {
+        form.setError('root', {
+          type: 'manual',
+          message: error.message,
+        });
+      }
     }
   }
 

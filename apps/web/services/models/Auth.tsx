@@ -62,7 +62,7 @@ export async function registerUser(authData: AuthModel): Promise<string> {
     return userCredential.user.uid; // Return the UID of the newly created user
   } catch (error) {
     console.error('Registration error:', error);
-    throw authErrorMessages[(error as AuthError).code];
+    throw new Error(authErrorMessages[(error as AuthError).code]);
   }
 }
 
@@ -81,7 +81,7 @@ export async function loginUser(
     return userCredential.user.uid;
   } catch (error) {
     console.error('Login error:', error);
-    throw authErrorMessages[(error as AuthError).code];
+    throw new Error(authErrorMessages[(error as AuthError).code]);
   }
 }
 
@@ -90,7 +90,7 @@ export async function logoutUser(): Promise<void> {
     await signOut(auth);
   } catch (error) {
     console.error('Logout error:', error);
-    throw authErrorMessages[(error as AuthError).code];
+    throw new Error(authErrorMessages[(error as AuthError).code]);
   }
 }
 
