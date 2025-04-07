@@ -21,8 +21,8 @@ export function Footer() {
           target={item.external ? '_blank' : ''}
           className="flex items-center gap-1 hover:underline underline-offset-4"
         >
-          {item.external && <ExternalLinkIcon className="w-4 h-4" />}
           {item.name}
+          {item.external && <ExternalLinkIcon className="w-4 h-4" />}
         </Link>
       ))}
     </div>

@@ -61,7 +61,7 @@ export default async function RootLayout({
                     <SidebarInset>
                       <SiteHeader />
                       <div className="flex flex-col w-full min-h-screen">
-                        <main className="p-8 flex-grow">{children}</main>
+                        <main className="p-4 md:p-8 flex-grow">{children}</main>
                         <Footer />
                       </div>
                     </SidebarInset>

@@ -1,26 +1,30 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '@/services/models/Auth';
+import { AppLogo } from '@/components/brand/app-logo';
 import { H1 } from '@/components/ui/headings';
+import { getVoter } from '@/lib/voters';
+import { VoterWithWallet } from '@/services/models/VoterDetails';
 
 export function UserGreeting() {
-  const [username, setUsername] = useState<string>('User');
+  const { currentUser } = useContext(AuthContext);
+  const [voter, setVoter] = useState<VoterWithWallet | null>(null);
 
   useEffect(() => {
-    try {
-      const userData = localStorage.getItem('userData');
-      if (userData) {
-        const parsedUserData = JSON.parse(userData);
-        if (parsedUserData && parsedUserData.name) {
-          setUsername(parsedUserData.name);
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching user data:', error);
+    if (currentUser) {
+      getVoter(currentUser.uid).then((voter) => setVoter(voter));
     }
-  }, []);
+  }, [currentUser]);
 
   return (
-    <H1>Welcome, {username}!</H1>
+    <H1 className="flex flex-wrap items-baseline justify-start gap-2 motion-preset-slide-down">
+      <span className="!text-5xl flex items-center">
+        W
+        <AppLogo className="w-9 mt-1 motion-preset-seesaw-lg motion-delay-500" />
+        lcome,
+      </span>
+      <span className="text-4xl">{voter?.fullName || 'whoever you are'}!</span>
+    </H1>
   );
 }
