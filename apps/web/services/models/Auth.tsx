@@ -62,7 +62,7 @@ export async function registerUser(authData: AuthModel): Promise<string> {
     return userCredential.user.uid; // Return the UID of the newly created user
   } catch (error) {
     console.error('Registration error:', error);
-    throw handleAuthError(error as AuthError);
+    throw authErrorMessages[(error as AuthError).code];
   }
 }
 
@@ -81,7 +81,7 @@ export async function loginUser(
     return userCredential.user.uid;
   } catch (error) {
     console.error('Login error:', error);
-    throw handleAuthError(error as AuthError);
+    throw authErrorMessages[(error as AuthError).code];
   }
 }
 
@@ -90,21 +90,19 @@ export async function logoutUser(): Promise<void> {
     await signOut(auth);
   } catch (error) {
     console.error('Logout error:', error);
-    throw handleAuthError(error as AuthError);
+    throw authErrorMessages[(error as AuthError).code];
   }
 }
 
-function handleAuthError(error: AuthError): Error {
-  switch (error.code) {
-    case 'auth/email-already-in-use':
-      return new Error('The email address is already in use');
-    case 'auth/invalid-email':
-      return new Error('The email address is invalid');
-    case 'auth/weak-password':
-      return new Error('The password is too weak');
-    case 'auth/operation-not-allowed':
-      return new Error('Email/password accounts are not enabled');
-    default:
-      return new Error('An unexpected error occurred');
-  }
-}
+const authErrorMessages: Record<string, string> = {
+  'auth/invalid-credential': 'Invalid email or password',
+  'auth/email-already-in-use': 'The email address is already in use',
+  'auth/invalid-email': 'The email address is invalid',
+  'auth/weak-password': 'The password is too weak',
+  'auth/operation-not-allowed': 'Email/password accounts are not enabled',
+  'auth/user-not-found': 'No user found with this email',
+  'auth/wrong-password': 'Incorrect password',
+  'auth/account-exists-with-different-credential':
+    'Account already exists with a different credential',
+  // Add more mappings as needed
+};
