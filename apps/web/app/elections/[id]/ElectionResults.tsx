@@ -25,7 +25,10 @@ export function ElectionResults({ election, voted, registered }: Props) {
           <UsersRoundIcon /> Voter Turnout
         </H3>
         <span className="text-5xl font-bold">
-          {((voted / registered) * 100).toFixed(2)}%
+          {(isNaN(voted / registered) ? 0 : (voted / registered) * 100).toFixed(
+            2
+          )}
+          %
         </span>
         <span className="font-semibold">
           {voted.toLocaleString()} / {registered.toLocaleString()}

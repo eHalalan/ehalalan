@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -25,6 +25,7 @@ import { Separator } from '@/components/ui/separator';
 import { CircleAlertIcon } from 'lucide-react';
 import { vote } from '@/services/ballot';
 import { useContracts } from '@/context/ContractsProvider';
+import { AuthContext } from '@/services/models/Auth';
 
 interface Props {
   election: Election;
@@ -48,6 +49,7 @@ export function Ballot({ election }: Props) {
 export function BallotForm({ election }: { election: Election }) {
   const requiredSelections = election.type === ElectionType.NATIONAL ? 14 : 12;
   const { account, signer } = useContracts();
+  const { currentUser } = useContext(AuthContext);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -69,6 +71,11 @@ export function BallotForm({ election }: { election: Election }) {
       return;
     }
 
+    if (!currentUser) {
+      toast.error('Please make sure you are logged in.');
+      return;
+    }
+
     try {
       setIsLoading(true);
 
@@ -85,8 +92,7 @@ export function BallotForm({ election }: { election: Election }) {
         voteData.vicePresidentVote = formData.vicePresidents[0];
       }
 
-      console.log(voteData);
-      await vote(account, election.id, voteData, signer);
+      await vote(currentUser.uid, account, election.id, voteData, signer);
       toast.success('You submitted your vote!\n');
       router.push(`/elections/${election.id}`);
     } catch (error) {

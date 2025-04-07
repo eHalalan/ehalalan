@@ -6,8 +6,6 @@ import {
   DocumentReference,
   query,
   where,
-  limit,
-  getDocs,
   getCountFromServer,
 } from 'firebase/firestore';
 import { VoterDetails, VoterWithWallet } from '@/services/models/VoterDetails';
@@ -27,13 +25,6 @@ export async function registerVoterDetails(
     console.error('Registration to firebase failed:', error);
     throw error;
   }
-}
-
-export async function isVoterVerified(address: string): Promise<boolean> {
-  const voterQuery = query(votersCol, where('wallet', '==', address), limit(1));
-  const res = await getDocs(voterQuery);
-
-  return !res.empty;
 }
 
 export async function getNumRegisteredVoters(): Promise<number> {

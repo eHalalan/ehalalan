@@ -1,6 +1,5 @@
 import { Election, VoteData } from '@/types/election';
 import { db } from './database';
-import { isVoterVerified } from './DAO/votersRegistry';
 import {
   collection,
   doc,
@@ -10,6 +9,7 @@ import {
 } from 'firebase/firestore';
 import { BallotFactory } from '@/lib/contracts/factory';
 import { ethers } from 'ethers';
+import { getVoter } from '@/lib/voters';
 
 const electionsCol = collection(db, 'elections');
 
@@ -29,6 +29,7 @@ export async function hasAlreadyVoted(id: string, voterWallet: string) {
 }
 
 export async function vote(
+  userId: string,
   voterAddress: string,
   ballotAddress: string,
   voteData: VoteData,
@@ -46,10 +47,18 @@ export async function vote(
     throw new Error('This Election is not ongoing.');
   }
 
-  const isVerified: boolean = await isVoterVerified(voterAddress);
+  const voter = await getVoter(userId);
 
-  if (!isVerified) {
+  if (!voter) {
+    throw new Error('Voter not found.');
+  }
+
+  if (!voter.verified) {
     throw new Error('You are not a verified voter.');
+  }
+
+  if (voter.wallet !== voterAddress) {
+    throw new Error('Wallet attached to user does not match.');
   }
 
   const electionVotersColRef = collection(electionDocRef, 'voters');
